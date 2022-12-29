@@ -48,6 +48,12 @@ http://localhost:3000/
 yarn test
 ```
 
+### Get Coverage percentage and HTML file
+
+```
+yarn test --coverage
+```
+
 ## Deployment
 
 In order to deploy, you need to run the following command:

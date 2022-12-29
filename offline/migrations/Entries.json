@@ -1,6 +1,6 @@
 {
   "Table": {
-    "TableName": "TickEntriesTable",
+    "TableName": "TimeEntriesTable",
     "KeySchema": [
       {
         "AttributeName": "id",

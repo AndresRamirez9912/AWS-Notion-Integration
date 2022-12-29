@@ -1,4 +1,4 @@
-service: tick-webhook
+service: time-webhook
 
 frameworkVersion: '3'
 
@@ -7,11 +7,11 @@ custom:
   settings:
     dev:
       STAGE: ${self:custom.stage}
-      DYNAMODB_TABLE: tick-entries-${self:custom.stage}
+      DYNAMODB_TABLE: time-entries-${self:custom.stage}
       REGION: ${self:provider.region}
     prod:
       STAGE: ${self:custom.stage}
-      DYNAMODB_TABLE: tick-entries-${self:custom.stage}
+      DYNAMODB_TABLE: time-entries-${self:custom.stage}
       REGION: ${self:provider.region}
   dynamodb:
     stages:
@@ -48,18 +48,28 @@ provider:
             burstLimit: 20
 
 functions:
-  createTickEntry:
-    handler: src/lambdas/createTickEntry.handler
+  createTimeEntry:
+    handler: src/lambdas/createTimeEntry.handler
     events:
       - http:
-          path: tick-webhook
+          path: time_entries/{id}
+          method: put
+          cors: true
+          private: true
+      - http:
+          path: time_entries
           method: post
+          cors: true
+          private: true
+      - http:
+          path: time_entries/{id}
+          method: delete
           cors: true
           private: true
 
 resources:
   Resources:
-    TickEntriesTable:
+    TimeEntriesTable:
       Type: AWS::DynamoDB::Table
       Properties:
         TableName: ${self:custom.settings.${self:custom.stage}.DYNAMODB_TABLE}
