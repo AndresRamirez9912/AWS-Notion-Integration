@@ -75,5 +75,5 @@ yarn deploy
 ### Production stage
 
 ```
-yarn deploy:api
+yarn deploy:prod
 ```
