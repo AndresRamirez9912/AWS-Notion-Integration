@@ -109,6 +109,18 @@ describe("createTmeEntry.handler", () => {
     expect(response.statusCode).toBe(500);
   });
 
+  test("error raised by missing time_entry in request body", async () => {
+    const evt = {
+      body: '{"key": "value"}',
+      httpMethod: "POST",
+    };
+
+    const response = await createTimeEntry.handler(evt, awsContext);
+    const jsonBody = JSON.parse(response.body);
+    expect(jsonBody.error).toBe("Missing time_entry root in request body");
+    expect(response.statusCode).toBe(400);
+  });
+
   test("error raised by dismatch between id in path and id in payload", async () => {
     const awsErrorMessage =
       "id in path parameters does not match id in payload";

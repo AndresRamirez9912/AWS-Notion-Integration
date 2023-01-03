@@ -18,7 +18,16 @@ module.exports.handler = async (event, context) => {
     const createdAt = new Date().toISOString();
     const eventType = eventTypesMap[event.httpMethod];
 
-    if (eventType != "CREATE" && event.pathParameters.id !== payload.id) {
+    if (!payload) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({
+          error: "Missing time_entry root in request body",
+        }),
+      };
+    }
+
+    if (eventType !== "CREATE" && event.pathParameters.id !== payload.id) {
       return {
         statusCode: 400,
         body: JSON.stringify({

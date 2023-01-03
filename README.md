@@ -1,4 +1,4 @@
-# Serverless Tick Webhook
+# Serverless Time Webhook
 
 ## Setup
 

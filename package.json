@@ -1,5 +1,5 @@
 {
-  "name": "serverless-tick-webhook",
+  "name": "serverless-time-webhook",
   "version": "1.0.0",
   "scripts": {
     "deploy": "sls deploy --stage dev --verbose",
@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kommitters/serverless-tick-webhook.git"
+    "url": "git+https://github.com/kommitters/serverless-time-webhook.git"
   },
   "keywords": [],
   "author": "",
   "bugs": {
-    "url": "https://github.com/kommitters/serverless-tick-webhook/issues"
+    "url": "https://github.com/kommitters/serverless-time-webhook/issues"
   },
-  "homepage": "https://github.com/kommitters/serverless-tick-webhook#readme",
+  "homepage": "https://github.com/kommitters/serverless-time-webhook#readme",
   "devDependencies": {
     "aws-sdk": "^2.1279.0",
     "jest": "^29.3.1",
