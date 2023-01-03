@@ -1,0 +1,4 @@
+dev:
+  AUTH_TOKEN: "abc-dev"
+prod:
+  AUTH_TOKEN: "abc-prod"

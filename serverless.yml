@@ -1,6 +1,6 @@
 service: time-webhook
 
-frameworkVersion: '3'
+frameworkVersion: "3"
 
 custom:
   stage: ${opt:stage, self:provider.stage}
@@ -23,7 +23,6 @@ custom:
     migration:
       dir: offline/migrations
 
-
 provider:
   name: aws
   runtime: nodejs16.x
@@ -37,35 +36,43 @@ provider:
       Resource:
         - arn:aws:dynamodb:${self:provider.region}:*:table/${self:custom.settings.${self:custom.stage}.DYNAMODB_TABLE}
 
-  apiGateway:
-    apiKeys:
-      - basic:
-          - ${self:custom.stage}-partner1
-    usagePlan:
-      - basic:
-          throttle:
-            rateLimit: 10
-            burstLimit: 20
-
 functions:
   createTimeEntry:
     handler: src/lambdas/createTimeEntry.handler
     events:
       - http:
-          path: time_entries/{id}
-          method: put
-          cors: true
-          private: true
-      - http:
           path: time_entries
           method: post
           cors: true
-          private: true
+          authorizer:
+            name: authorizerFunc
+            resultTtlInSeconds: 0
+            type: token
+            identitySource: method.request.header.Authorization
+
+      - http:
+          path: time_entries/{id}
+          method: put
+          cors: true
+          authorizer:
+            name: authorizerFunc
+            resultTtlInSeconds: 0
+            type: token
+            identitySource: method.request.header.Authorization
+
       - http:
           path: time_entries/{id}
           method: delete
           cors: true
-          private: true
+          authorizer:
+            name: authorizerFunc
+            resultTtlInSeconds: 0
+            type: token
+            identitySource: method.request.header.Authorization
+
+  authorizerFunc:
+    handler: src/lambdas/authorizer.handler
+    environment: ${file(./env-auth.yml):${self:custom.stage}}
 
 resources:
   Resources:
@@ -84,4 +91,3 @@ resources:
 plugins:
   - serverless-offline
   - serverless-dynamodb-local
-

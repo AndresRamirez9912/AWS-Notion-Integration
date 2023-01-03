@@ -28,6 +28,14 @@ yarn install
 sls dynamodb install
 ```
 
+### Create `env-auth.yml` file
+
+```
+cp env-auth.yml.example env-auth.yml
+```
+
+Fill the `env-auth.yml` file with the values of the environment variables.
+
 ### Run serverless offline
 
 In order to run a local version of the project (API Gateway + Lambda + DynamoDB), execute the following command:
