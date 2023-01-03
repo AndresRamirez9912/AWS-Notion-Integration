@@ -66,14 +66,14 @@ yarn test --coverage
 
 In order to deploy, you need to run the following command:
 
-### Stage: dev
+### Development stage
 
 ```
 yarn deploy
 ```
 
-### Stage: prod
+### Production stage
 
 ```
-yarn deploy:prod
+yarn deploy:api
 ```

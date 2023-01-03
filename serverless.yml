@@ -9,7 +9,7 @@ custom:
       STAGE: ${self:custom.stage}
       DYNAMODB_TABLE: time-entries-${self:custom.stage}
       REGION: ${self:provider.region}
-    prod:
+    api:
       STAGE: ${self:custom.stage}
       DYNAMODB_TABLE: time-entries-${self:custom.stage}
       REGION: ${self:provider.region}
@@ -41,7 +41,7 @@ functions:
     handler: src/lambdas/createTimeEntry.handler
     events:
       - http:
-          path: time_entries
+          path: v1/time_entries
           method: post
           cors: true
           authorizer:
@@ -51,7 +51,7 @@ functions:
             identitySource: method.request.header.Authorization
 
       - http:
-          path: time_entries/{id}
+          path: v1/time_entries/{id}
           method: put
           cors: true
           authorizer:
@@ -61,7 +61,7 @@ functions:
             identitySource: method.request.header.Authorization
 
       - http:
-          path: time_entries/{id}
+          path: v1/time_entries/{id}
           method: delete
           cors: true
           authorizer:
