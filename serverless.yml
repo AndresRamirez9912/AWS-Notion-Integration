@@ -1,21 +1,16 @@
-service: time-webhook
+service: time-webhook-${env:STAGE}
 
 frameworkVersion: "3"
 
 custom:
   stage: ${opt:stage, self:provider.stage}
   settings:
-    dev:
-      STAGE: ${self:custom.stage}
-      DYNAMODB_TABLE: time-entries-${self:custom.stage}
-      REGION: ${self:provider.region}
     api:
-      STAGE: ${self:custom.stage}
-      DYNAMODB_TABLE: time-entries-${self:custom.stage}
+      DYNAMODB_TABLE: time-entries-${env:STAGE}
       REGION: ${self:provider.region}
   dynamodb:
     stages:
-      - dev
+      - api
     start:
       port: 8000
       inMemory: true
@@ -26,7 +21,7 @@ custom:
 provider:
   name: aws
   runtime: nodejs16.x
-  stage: dev # default stage
+  stage: api # default stage
   region: us-east-1
   environment: ${self:custom.settings.${self:custom.stage}}
   iamRoleStatements:
@@ -72,7 +67,7 @@ functions:
 
   authorizerFunc:
     handler: src/lambdas/authorizer.handler
-    environment: ${file(./env-auth.yml):${self:custom.stage}}
+    environment: ${file(./env-auth.yml):${env:STAGE}}
 
 resources:
   Resources:
