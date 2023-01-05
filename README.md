@@ -41,7 +41,7 @@ Fill the `env-auth.yml` file with the values of the environment variables.
 In order to run a local version of the project (API Gateway + Lambda + DynamoDB), execute the following command:
 
 ```
-sls offline start
+yarn local:dev
 ```
 
 Now, you can test the endpoints available on the local server:
@@ -69,7 +69,7 @@ In order to deploy, you need to run the following command:
 ### Development stage
 
 ```
-yarn deploy
+yarn deploy:dev
 ```
 
 ### Production stage

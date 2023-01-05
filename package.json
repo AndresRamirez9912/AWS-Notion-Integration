@@ -2,8 +2,10 @@
   "name": "serverless-time-webhook",
   "version": "1.0.0",
   "scripts": {
-    "deploy": "sls deploy --stage dev --verbose",
-    "deploy:prod": "sls deploy --stage api --verbose",
+    "deploy:dev": "STAGE=dev sls deploy --verbose",
+    "deploy:prod": "STAGE=prod sls deploy --verbose",
+    "local:dev": "STAGE=dev sls offline start",
+    "local:prod": "STAGE=prod sls offline start",
     "test": "jest"
   },
   "repository": {

@@ -1,4 +1,4 @@
 dev:
   AUTH_TOKEN: "abc-dev"
-api:
+prod:
   AUTH_TOKEN: "abc-prod"
