@@ -65,6 +65,19 @@ functions:
             type: token
             identitySource: method.request.header.Authorization
 
+  getTimeEntriesByRange:
+    handler: src/lambdas/getTimeEntry.handler
+    events:
+      - http:
+          path: v1/time_entries
+          method: get
+          cors: true
+          authorizer:
+            name: authorizerFunc
+            resultTtlInSeconds: 0
+            type: token
+            identitySource: method.request.header.Authorization
+
   authorizerFunc:
     handler: src/lambdas/authorizer.handler
     environment: ${file(./env-auth.yml):${env:STAGE}}

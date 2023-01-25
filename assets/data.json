@@ -1,0 +1,77 @@
+[
+  {
+    "createdAt": "2023-01-24T17:47:34.691Z",
+    "id": "aa4c46b9-1be3-4677-872a-374d5157bc15",
+    "eventType": "CREATE",
+    "payload": {
+      "started_at": "2022-12-20T01:10:00.000Z",
+      "finish_at": "2022-12-20T02:00:00.000Z",
+      "duration": 180,
+      "user_id": 1,
+      "project_id": 100,
+      "description": "Entry #1",
+      "id": "317a00f4-9f39-42d0-90c7-589a68fc5e90",
+      "billable": true
+    }
+  },
+  {
+    "createdAt": "2023-01-24T17:47:34.691Z",
+    "id": "aa4c46b9-1be3-4677-872a-374d5157bc16",
+    "eventType": "CREATE",
+    "payload": {
+      "started_at": "2022-12-20T02:10:00.000Z",
+      "finish_at": "2022-12-20T03:00:00.000Z",
+      "duration": 180,
+      "user_id": 2,
+      "project_id": 100,
+      "description": "Entry #2",
+      "id": "317a00f4-9f39-42d0-90c7-589a68fc5e91",
+      "billable": true
+    }
+  },
+  {
+    "createdAt": "2023-01-24T17:47:34.691Z",
+    "id": "aa4c46b9-1be3-4677-872a-374d5157bc17",
+    "eventType": "CREATE",
+    "payload": {
+      "started_at": "2022-12-20T03:10:00.000Z",
+      "finish_at": "2022-12-20T04:00:00.000Z",
+      "duration": 180,
+      "user_id": 3,
+      "project_id": 100,
+      "description": "First Entry",
+      "id": "317a00f4-9f39-42d0-90c7-589a68fc5e92",
+      "billable": true
+    }
+  },
+  {
+    "createdAt": "2023-01-24T17:47:34.691Z",
+    "id": "aa4c46b9-1be3-4677-872a-374d5157bc18",
+    "eventType": "CREATE",
+    "payload": {
+      "started_at": "2022-12-20T04:10:00.000Z",
+      "finish_at": "2022-12-20T05:00:00.000Z",
+      "duration": 180,
+      "user_id": 4,
+      "project_id": 100,
+      "description": "First Entry",
+      "id": "317a00f4-9f39-42d0-90c7-589a68fc5e93",
+      "billable": true
+    }
+  },
+  {
+    "createdAt": "2023-01-24T17:47:34.691Z",
+    "id": "aa4c46b9-1be3-4677-872a-374d5157bc19",
+    "eventType": "CREATE",
+    "payload": {
+      "started_at": "2022-12-20T05:10:00.000Z",
+      "finish_at": "2022-12-20T06:00:00.000Z",
+      "duration": 180,
+      "user_id": 5,
+      "project_id": 100,
+      "description": "First Entry",
+      "id": "317a00f4-9f39-42d0-90c7-589a68fc5e94",
+      "billable": true
+    }
+  }
+]
