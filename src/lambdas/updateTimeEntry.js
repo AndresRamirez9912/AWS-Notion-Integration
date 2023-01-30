@@ -18,6 +18,7 @@ module.exports.handler = async (event) => {
     common.validatePayload(payload);
     common.validateDate(payload);
     common.validateCompleteEntry(payload);
+    common.validateURLQuery(event, payload);
 
     const item = {
       id: payload.id,
@@ -35,9 +36,18 @@ module.exports.handler = async (event) => {
     };
 
     await dynamodb
-      .put({
+      .update({
         TableName: DYNAMODB_TABLE,
-        Item: item,
+        Key: { id: item.id },
+        UpdateExpression:
+          "set started_at = :started_at, finish_at = :finish_at, description = :description, user_id = :user_id, billable = :billable",
+        ExpressionAttributeValues: {
+          ":started_at": item.started_at,
+          ":finish_at": item.finish_at,
+          ":description": item.description,
+          ":user_id": item.user_id,
+          ":billable": item.billable,
+        },
       })
       .promise();
     return {

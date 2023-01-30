@@ -18,6 +18,7 @@ module.exports.handler = async (event) => {
     common.validatePayload(payload);
     common.validateDate(payload);
     common.validateCompleteEntry(payload);
+    common.validateURLQuery(event, payload);
 
     const item = {
       id: payload.id,
@@ -35,14 +36,16 @@ module.exports.handler = async (event) => {
     };
 
     await dynamodb
-      .put({
+      .delete({
         TableName: DYNAMODB_TABLE,
-        Item: item,
+        Key: {
+          id: item.id,
+        },
       })
       .promise();
     return {
       statusCode: 201,
-      body: JSON.stringify({ data: item }),
+      body: JSON.stringify({ data: "Element eliminated succesfully" }),
     };
   } catch (error) {
     return {

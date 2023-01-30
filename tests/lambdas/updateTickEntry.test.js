@@ -1,10 +1,10 @@
-const createTimeEntry = require("../../src/lambdas/createTimeEntry");
+const createTimeEntry = require("../../src/lambdas/updateTimeEntry");
 const AWS = require("aws-sdk");
 const dynamodb = new AWS.DynamoDB.DocumentClient({ region: "local" });
 
 jest.mock("aws-sdk", () => {
   const mockDocumentClient = {
-    put: jest.fn(),
+    update: jest.fn(),
   };
   const mockDynamoDB = {
     DocumentClient: jest.fn(() => mockDocumentClient),
@@ -34,12 +34,10 @@ describe("createTmeEntry.handler", () => {
     pathParameters: { id: "317a00f4-9f39-42d0-90c7-589a68fc5e90" },
   };
 
-  test("success response with POST method", async () => {
-    dynamodb.put.mockReturnValueOnce({
+  test("success response with DELETE method", async () => {
+    dynamodb.update.mockReturnValueOnce({
       promise: () => Promise.resolve({}),
     });
-
-    awsEvent.httpMethod = "POST";
 
     const response = await createTimeEntry.handler(awsEvent);
     const { data: jsonBody } = JSON.parse(response.body);
@@ -53,41 +51,37 @@ describe("createTmeEntry.handler", () => {
     expect(jsonBody).toStrictEqual(input.time_entry);
   });
 
-  test("error raised by dynamodb.put", async () => {
+  test("error raised by dismatch between id in path and id in payload", async () => {
     const awsErrorMessage =
-      "One or more parameter values were invalid: Missing the key id in the item";
-    dynamodb.put.mockReturnValueOnce({
-      promise: () => Promise.reject(new Error(awsErrorMessage)),
-    });
-    awsEvent.httpMethod = "POST";
-    const response = await createTimeEntry.handler(awsEvent);
-    const jsonBody = JSON.parse(response.body);
+      "id in path parameters does not match id in payload";
 
-    expect(jsonBody.error).toBe(awsErrorMessage);
-    expect(response.statusCode).toBe(500);
-  });
+    errorInput = input;
+    errorInput.started_at = "2022-12-20T18:14:00.000Z";
 
-  test("error decoding request body", async () => {
     const evtError = {
-      body: '{"time_entry":{ "id": "317a00f4-9f39-42d0-90c7-589a68fc5e90" "started_at": 2022-12-20T16:11:00.000Z,} }',
+      body: JSON.stringify(errorInput),
+      pathParameters: { id: "450a00f4-9f39-42d0-90c7-589a68fc5e90" },
     };
 
     const response = await createTimeEntry.handler(evtError);
     const jsonBody = JSON.parse(response.body);
 
-    expect(jsonBody.error.startsWith("Unexpected string")).toBe(true);
-    expect(response.statusCode).toBe(500);
+    expect(jsonBody.error).toBe(awsErrorMessage);
+    expect(response.statusCode).toBe(400);
   });
 
-  test("error raised by missing time_entry in request body", async () => {
-    const evt = {
-      body: '{"key": "value"}',
-      httpMethod: "POST",
+  test("error raised by left an element in payload", async () => {
+    const awsErrorMessage = "Some Parameter is Empty";
+
+    const evtError = {
+      body: '{"time_entry":{ "id": "317a00f4-9f39-42d0-90c7-589a68fc5e90", "started_at": "2022-12-20T16:11:00.000Z"} }',
+      pathParameters: { id: "450a00f4-9f39-42d0-90c7-589a68fc5e90" },
     };
 
-    const response = await createTimeEntry.handler(evt);
+    const response = await createTimeEntry.handler(evtError);
     const jsonBody = JSON.parse(response.body);
-    expect(jsonBody.error).toBe("Missing time_entry root in request body");
+
+    expect(jsonBody.error).toBe(awsErrorMessage);
     expect(response.statusCode).toBe(400);
   });
 });
