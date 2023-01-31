@@ -24,10 +24,8 @@ module.exports.handler = async (event) => {
     const { Items } = await dynamodb
       .scan({
         TableName: DYNAMODB_TABLE,
-        FilterExpression:
-          "#payload.#started_at >= :start and #payload.#finish_at <= :end",
+        FilterExpression: "#started_at >= :start and #finish_at <= :end",
         ExpressionAttributeNames: {
-          "#payload": "payload",
           "#started_at": "started_at",
           "#finish_at": "finish_at",
         },

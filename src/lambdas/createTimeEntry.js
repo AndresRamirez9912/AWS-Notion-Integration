@@ -27,9 +27,8 @@ module.exports.handler = async (event) => {
       user_id: payload.user_id,
       billable: payload.billable,
       project_id: payload.project_id,
-      duration: payload.duration,
+      entry_duration: payload.duration,
       created_at,
-      tag_id: payload.tag_id,
       is_uploaded: false,
       page_id: "",
     };

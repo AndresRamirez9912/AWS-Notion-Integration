@@ -25,7 +25,7 @@ yarn install
 ### Migrate local dynamodb
 
 ```
-sls dynamodb install
+STAGE=dev sls dynamodb install
 ```
 
 ### Create `env-auth.yml` file

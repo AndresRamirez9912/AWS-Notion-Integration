@@ -13,39 +13,57 @@ const common = require("../../common/common");
 module.exports.handler = async (event) => {
   try {
     const { time_entry: payload } = JSON.parse(event.body);
-    const created_at = new Date().toISOString();
 
     common.validatePayload(payload);
-    common.validateDate(payload.started_at, payload.finish_at);
     common.validateURLQuery(event, payload);
 
-    const item = {
-      id: payload.id,
-      started_at: payload.started_at,
-      finish_at: payload.finish_at,
-      description: payload.description,
-      user_id: payload.user_id,
-      billable: payload.billable,
-    };
-
-    await dynamodb
-      .update({
+    // Get the item from the database
+    const item = await dynamodb
+      .get({
         TableName: DYNAMODB_TABLE,
-        Key: { id: item.id },
-        UpdateExpression:
-          "set started_at = :started_at, finish_at = :finish_at, description = :description, user_id = :user_id, billable = :billable",
-        ExpressionAttributeValues: {
-          ":started_at": item.started_at,
-          ":finish_at": item.finish_at,
-          ":description": item.description,
-          ":user_id": item.user_id,
-          ":billable": item.billable,
+        Key: {
+          id: payload.id,
         },
       })
       .promise();
+
+    // If the item doesn't exist, throw an error
+    if (!item.Item) {
+      const error = Error("Item not found");
+      error.code = 404;
+      throw error;
+    }
+
+    // Change duration to entry_duration in payload
+    payload.entry_duration = payload.duration;
+    delete payload.duration;
+
+    // If the item exists, update it
+    const itemObject = Object.assign(item.Item, payload);
+
+    const { Attributes } = await dynamodb
+      .update({
+        TableName: DYNAMODB_TABLE,
+        Key: {
+          id: payload.id,
+        },
+        UpdateExpression:
+          "set started_at = :started_at, finish_at = :finish_at, description = :description, user_id = :user_id, billable = :billable, project_id = :project_id, entry_duration = :entry_duration",
+        ExpressionAttributeValues: {
+          ":started_at": itemObject.started_at,
+          ":finish_at": itemObject.finish_at,
+          ":description": itemObject.description,
+          ":user_id": itemObject.user_id,
+          ":billable": itemObject.billable,
+          ":project_id": itemObject.project_id,
+          ":entry_duration": itemObject.entry_duration,
+        },
+        ReturnValues: "ALL_NEW",
+      })
+      .promise();
     return {
-      statusCode: 201,
-      body: JSON.stringify({ data: item }),
+      statusCode: 200,
+      body: JSON.stringify({ data: Attributes }),
     };
   } catch (error) {
     return {

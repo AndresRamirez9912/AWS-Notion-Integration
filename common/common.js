@@ -49,6 +49,7 @@ function isIsoDate(str) {
   const d = new Date(str);
   return d instanceof Date && !isNaN(d) && d.toISOString() === str; // valid date
 }
+
 module.exports = {
   validateDate,
   validatePayload,

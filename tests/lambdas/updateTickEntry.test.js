@@ -5,6 +5,7 @@ const dynamodb = new AWS.DynamoDB.DocumentClient({ region: "local" });
 jest.mock("aws-sdk", () => {
   const mockDocumentClient = {
     update: jest.fn(),
+    get: jest.fn(),
   };
   const mockDynamoDB = {
     DocumentClient: jest.fn(() => mockDocumentClient),
@@ -21,6 +22,7 @@ describe("createTmeEntry.handler", () => {
       description: "ijasodij19 1 212",
       user_id: 11,
       billable: true,
+      project_id: 100,
     },
   };
 
@@ -29,15 +31,33 @@ describe("createTmeEntry.handler", () => {
     pathParameters: { id: "317a00f4-9f39-42d0-90c7-589a68fc5e90" },
   };
 
-  test("success response with DELETE method", async () => {
+  test("success response with PUT method", async () => {
+    const data = {
+      Item: {
+        finish_at: "2022-12-20T06:00:00.000Z",
+        entry_duration: 200,
+        project_id: 100,
+        user_id: "c05a14fb-eb6f-45c1-850c-8ea500fda7de",
+        created_at: "2023-01-31T19:50:51.233Z",
+        description: "Nueva Edicion de la Primera Prueba",
+        started_at: "2022-12-20T01:10:00.000Z",
+        id: "1",
+        billable: false,
+      },
+    };
+
+    dynamodb.get.mockReturnValueOnce({
+      promise: () => Promise.resolve(data),
+    });
+
     dynamodb.update.mockReturnValueOnce({
-      promise: () => Promise.resolve({}),
+      promise: () => Promise.resolve({ Attributes: data.Item }),
     });
 
     const response = await createTimeEntry.handler(awsEvent);
     const { data: jsonBody } = JSON.parse(response.body);
 
-    expect(response.statusCode).toBe(201);
+    expect(response.statusCode).toBe(200);
     expect(typeof response.body).toBe("string");
     expect(jsonBody.id).toBe(input.time_entry.id);
     delete jsonBody.created_at;

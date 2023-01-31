@@ -7,7 +7,7 @@ describe("authorizer.handler", () => {
 
   test("allow access with valid token", async () => {
     const awsEvent = {
-      authorizationToken: "Token 123",
+      authorizationToken: "Token token=123",
     };
 
     const response = await authorizer.handler(awsEvent);
@@ -16,7 +16,7 @@ describe("authorizer.handler", () => {
 
   test("deny access with invalid token", async () => {
     const awsEvent = {
-      authorizationToken: "Token 456",
+      authorizationToken: "Token token=456",
     };
 
     const response = await authorizer.handler(awsEvent);

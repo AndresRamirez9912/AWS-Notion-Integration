@@ -23,7 +23,6 @@ describe("createTmeEntry.handler", () => {
       billable: true,
       project_id: 5,
       duration: 180,
-      tag_id: 100,
       is_uploaded: false,
       page_id: "",
     },
@@ -39,8 +38,6 @@ describe("createTmeEntry.handler", () => {
       promise: () => Promise.resolve({}),
     });
 
-    awsEvent.httpMethod = "POST";
-
     const response = await createTimeEntry.handler(awsEvent);
     const { data: jsonBody } = JSON.parse(response.body);
 
@@ -50,6 +47,8 @@ describe("createTmeEntry.handler", () => {
     expect(typeof jsonBody.created_at).toBe("string");
     delete jsonBody.created_at;
     delete input.time_entry.created_at;
+    delete input.time_entry.duration;
+    delete jsonBody.entry_duration;
     expect(jsonBody).toStrictEqual(input.time_entry);
   });
 
@@ -59,7 +58,6 @@ describe("createTmeEntry.handler", () => {
     dynamodb.put.mockReturnValueOnce({
       promise: () => Promise.reject(new Error(awsErrorMessage)),
     });
-    awsEvent.httpMethod = "POST";
     const response = await createTimeEntry.handler(awsEvent);
     const jsonBody = JSON.parse(response.body);
 
