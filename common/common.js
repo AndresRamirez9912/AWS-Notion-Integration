@@ -33,8 +33,8 @@ function validateCompleteEntry(payload) {
     !payload.started_at ||
     !payload.finish_at ||
     !payload.description ||
-    !payload.user_id ||
-    !payload.project_id ||
+    !payload.user ||
+    !payload.project ||
     !payload.duration
   ) {
     const error = new Error("Some Parameter is Empty");

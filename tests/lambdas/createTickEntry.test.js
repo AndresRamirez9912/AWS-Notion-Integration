@@ -19,9 +19,15 @@ describe("createTmeEntry.handler", () => {
       started_at: "2022-12-20T16:11:00.000Z",
       finish_at: "2022-12-20T16:14:00.000Z",
       description: "ijasodij19 1 212",
-      user_id: 11,
+      user: {
+        id: 11,
+        name: "Juan",
+      },
       billable: true,
-      project_id: 5,
+      project: {
+        id: 5,
+        name: "Rocket Launch",
+      },
       duration: 180,
       is_uploaded: false,
       page_id: "",

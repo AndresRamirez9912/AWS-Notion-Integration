@@ -20,9 +20,15 @@ describe("createTmeEntry.handler", () => {
       started_at: "2022-12-20T16:11:00.000Z",
       finish_at: "2022-12-20T16:14:00.000Z",
       description: "ijasodij19 1 212",
-      user_id: 11,
+      user: {
+        id: "11",
+        name: "Juan",
+      },
       billable: true,
-      project_id: 100,
+      project: {
+        id: 100,
+        name: "Rocket Launch",
+      },
     },
   };
 
@@ -36,8 +42,14 @@ describe("createTmeEntry.handler", () => {
       Item: {
         finish_at: "2022-12-20T06:00:00.000Z",
         entry_duration: 200,
-        project_id: 100,
-        user_id: "c05a14fb-eb6f-45c1-850c-8ea500fda7de",
+        project: {
+          id: 100,
+          name: "Rocket Launch",
+        },
+        user: {
+          id: "c05a14fb-eb6f-45c1-850c-8ea500fda7de",
+          name: "Juan",
+        },
         created_at: "2023-01-31T19:50:51.233Z",
         description: "Nueva Edicion de la Primera Prueba",
         started_at: "2022-12-20T01:10:00.000Z",
