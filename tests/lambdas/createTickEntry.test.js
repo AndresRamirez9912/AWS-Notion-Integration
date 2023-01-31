@@ -25,7 +25,7 @@ describe("createTmeEntry.handler", () => {
       duration: 180,
       tag_id: 100,
       is_uploaded: false,
-      page_id: " ",
+      page_id: "",
     },
   };
 

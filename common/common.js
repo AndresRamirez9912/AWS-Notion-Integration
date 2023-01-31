@@ -18,9 +18,9 @@ function validateURLQuery(event, payload) {
   return null;
 }
 
-function validateDate(payload) {
-  if (payload.started_at > payload.finish_at) {
-    const error = new Error("Start Date major than Finish date");
+function validateDate(started_at, finish_at) {
+  if (started_at > finish_at) {
+    const error = new Error("Start date must be before end date");
     error.code = 400;
     throw error;
   }
@@ -35,7 +35,6 @@ function validateCompleteEntry(payload) {
     !payload.description ||
     !payload.user_id ||
     !payload.project_id ||
-    !payload.tag_id ||
     !payload.duration
   ) {
     const error = new Error("Some Parameter is Empty");
@@ -44,9 +43,16 @@ function validateCompleteEntry(payload) {
   }
   return null;
 }
+
+function isIsoDate(str) {
+  if (!/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/.test(str)) return false;
+  const d = new Date(str);
+  return d instanceof Date && !isNaN(d) && d.toISOString() === str; // valid date
+}
 module.exports = {
   validateDate,
   validatePayload,
   validateURLQuery,
   validateCompleteEntry,
+  isIsoDate,
 };

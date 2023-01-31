@@ -16,8 +16,7 @@ module.exports.handler = async (event) => {
     const created_at = new Date().toISOString();
 
     common.validatePayload(payload);
-    common.validateDate(payload);
-    common.validateCompleteEntry(payload);
+    common.validateDate(payload.started_at, payload.finish_at);
     common.validateURLQuery(event, payload);
 
     const item = {
@@ -27,12 +26,6 @@ module.exports.handler = async (event) => {
       description: payload.description,
       user_id: payload.user_id,
       billable: payload.billable,
-      project_id: payload.project_id,
-      duration: payload.duration,
-      created_at,
-      tag_id: payload.tag_id,
-      is_uploaded: false,
-      page_id: " ",
     };
 
     await dynamodb

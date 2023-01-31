@@ -21,11 +21,6 @@ describe("createTmeEntry.handler", () => {
       description: "ijasodij19 1 212",
       user_id: 11,
       billable: true,
-      project_id: 5,
-      duration: 180,
-      tag_id: 100,
-      is_uploaded: false,
-      page_id: " ",
     },
   };
 
@@ -45,9 +40,7 @@ describe("createTmeEntry.handler", () => {
     expect(response.statusCode).toBe(201);
     expect(typeof response.body).toBe("string");
     expect(jsonBody.id).toBe(input.time_entry.id);
-    expect(typeof jsonBody.created_at).toBe("string");
     delete jsonBody.created_at;
-    delete input.time_entry.created_at;
     expect(jsonBody).toStrictEqual(input.time_entry);
   });
 
@@ -60,21 +53,6 @@ describe("createTmeEntry.handler", () => {
 
     const evtError = {
       body: JSON.stringify(errorInput),
-      pathParameters: { id: "450a00f4-9f39-42d0-90c7-589a68fc5e90" },
-    };
-
-    const response = await createTimeEntry.handler(evtError);
-    const jsonBody = JSON.parse(response.body);
-
-    expect(jsonBody.error).toBe(awsErrorMessage);
-    expect(response.statusCode).toBe(400);
-  });
-
-  test("error raised by left an element in payload", async () => {
-    const awsErrorMessage = "Some Parameter is Empty";
-
-    const evtError = {
-      body: '{"time_entry":{ "id": "317a00f4-9f39-42d0-90c7-589a68fc5e90", "started_at": "2022-12-20T16:11:00.000Z"} }',
       pathParameters: { id: "450a00f4-9f39-42d0-90c7-589a68fc5e90" },
     };
 

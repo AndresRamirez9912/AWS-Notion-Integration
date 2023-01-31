@@ -49,18 +49,16 @@ describe("createTmeEntry.handler", () => {
       started_at: "2022-12-20T16:11:00.000Z",
       finish_at: "2022-12-20T18:14:00.000Z",
     };
-    response = commons.validateDate(payload);
+    response = commons.validateDate(payload.started_at, payload.finish_at);
     expect(response).toBeNull();
   });
 
   test("Fail Date on Payload", async () => {
-    const errorPayload = {
-      started_at: "2022-12-20T18:11:00.000Z",
-      finish_at: "2022-12-20T16:14:00.000Z",
-    };
+    const started_at = "2022-12-20T18:11:00.000Z";
+    const finish_at = "2022-12-20T16:14:00.000Z";
 
     expect(() => {
-      commons.validateDate(errorPayload);
+      commons.validateDate(started_at, finish_at);
     }).toThrow();
   });
 });

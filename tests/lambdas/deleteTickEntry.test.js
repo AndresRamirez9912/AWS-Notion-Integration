@@ -25,7 +25,7 @@ describe("createTmeEntry.handler", () => {
       duration: 180,
       tag_id: 100,
       is_uploaded: false,
-      page_id: " ",
+      page_id: "",
     },
   };
 
@@ -44,7 +44,6 @@ describe("createTmeEntry.handler", () => {
 
     expect(response.statusCode).toBe(201);
     expect(typeof response.body).toBe("string");
-    // expect(typeof jsonBody.data).toBe(message);
   });
 
   test("error raised by dismatch between id in path and id in payload", async () => {

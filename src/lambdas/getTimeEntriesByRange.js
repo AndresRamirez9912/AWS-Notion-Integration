@@ -8,23 +8,18 @@ const options = process.env.IS_OFFLINE
 
 const AWS = require("aws-sdk");
 const dynamodb = new AWS.DynamoDB.DocumentClient(options);
-
-const isIsoDate = (str) => {
-  if (!/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/.test(str)) return false;
-  const d = new Date(str);
-  return d instanceof Date && !isNaN(d) && d.toISOString() === str; // valid date
-};
+const commons = require("../../common/common");
 
 module.exports.handler = async (event) => {
   try {
     const { start, end } = event.queryStringParameters;
 
-    if (!isIsoDate(start) || !isIsoDate(end))
+    if (!commons.isIsoDate(start) || !commons.isIsoDate(end))
       throw new Error(
         "Query parameters 'start' and 'end' are invalid or not provided"
       );
 
-    if (start > end) throw new Error("Start date must be before end date");
+    commons.validateDate(start, end);
 
     const { Items } = await dynamodb
       .scan({
