@@ -45,6 +45,9 @@ functions:
             type: token
             identitySource: method.request.header.Authorization
 
+  updateTimeEntry:
+    handler: src/lambdas/updateTimeEntry.handler
+    events:
       - http:
           path: v1/time_entries/{id}
           method: put
@@ -55,6 +58,9 @@ functions:
             type: token
             identitySource: method.request.header.Authorization
 
+  deleteTimeEntry:
+    handler: src/lambdas/deleteTimeEntry.handler
+    events:
       - http:
           path: v1/time_entries/{id}
           method: delete
@@ -66,7 +72,7 @@ functions:
             identitySource: method.request.header.Authorization
 
   getTimeEntriesByRange:
-    handler: src/lambdas/getTimeEntry.handler
+    handler: src/lambdas/getTimeEntriesByRange.handler
     events:
       - http:
           path: v1/time_entries

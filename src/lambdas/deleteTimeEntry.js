@@ -13,35 +13,22 @@ const common = require("../../common/common");
 module.exports.handler = async (event) => {
   try {
     const { time_entry: payload } = JSON.parse(event.body);
-    const created_at = new Date().toISOString();
 
     common.validatePayload(payload);
-    common.validateDate(payload.started_at, payload.finish_at);
-    common.validateCompleteEntry(payload);
-
-    const item = {
-      id: payload.id,
-      started_at: payload.started_at,
-      finish_at: payload.finish_at,
-      description: payload.description,
-      user: payload.user,
-      billable: payload.billable,
-      project: payload.project,
-      entry_duration: payload.duration,
-      created_at,
-      is_uploaded: false,
-      page_id: "",
-    };
+    common.validateURLQuery(event, payload);
 
     await dynamodb
-      .put({
+      .delete({
         TableName: DYNAMODB_TABLE,
-        Item: item,
+        Key: {
+          id: payload.id,
+        },
       })
       .promise();
+
     return {
-      statusCode: 201,
-      body: JSON.stringify({ data: item }),
+      statusCode: 200,
+      body: JSON.stringify({ data: "Element deleted succesfully" }),
     };
   } catch (error) {
     return {

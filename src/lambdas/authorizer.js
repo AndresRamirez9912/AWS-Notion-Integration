@@ -18,7 +18,7 @@ const generatePolicy = ({ allow }) => {
 
 exports.handler = async function (event) {
   const authToken = event.authorizationToken;
-  const [_, token] = authToken.split("Token ");
+  const [_, token] = authToken.split("Token token=");
 
   const allow = token === process.env.AUTH_TOKEN;
   return generatePolicy({ allow });
