@@ -94,4 +94,37 @@ describe("createTmeEntry.handler", () => {
     expect(jsonBody.error).toBe(awsErrorMessage);
     expect(response.statusCode).toBe(400);
   });
+
+  test("error raised by item not found", async () => {
+    const awsErrorMessage = "Item not found";
+
+    dynamodb.get.mockReturnValueOnce({
+      promise: () => Promise.resolve({}),
+    });
+
+    dynamodb.update.mockReturnValueOnce({
+      promise: () => Promise.resolve({}),
+    });
+
+    const response = await createTimeEntry.handler(awsEvent);
+    const jsonBody = JSON.parse(response.body);
+
+    expect(jsonBody.error).toBe(awsErrorMessage);
+    expect(response.statusCode).toBe(404);
+  });
+
+  test("error raised by update Dynamo Function", async () => {
+    dynamodb.get.mockReturnValueOnce({
+      promise: () => Promise.resolve(data),
+    });
+
+    dynamodb.update.mockReturnValueOnce({
+      promise: () => Promise.reject(),
+    });
+
+    const response = await createTimeEntry.handler(awsEvent);
+    const jsonBody = JSON.parse(response.body);
+
+    expect(response.statusCode).toBe(500);
+  });
 });

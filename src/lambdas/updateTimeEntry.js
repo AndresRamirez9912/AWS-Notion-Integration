@@ -8,7 +8,7 @@ const options = process.env.IS_OFFLINE
 
 const AWS = require("aws-sdk");
 const dynamodb = new AWS.DynamoDB.DocumentClient(options);
-const common = require("../../common/common");
+const common = require("../common/common");
 
 module.exports.handler = async (event) => {
   try {

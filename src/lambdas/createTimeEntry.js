@@ -8,7 +8,7 @@ const options = process.env.IS_OFFLINE
 
 const AWS = require("aws-sdk");
 const dynamodb = new AWS.DynamoDB.DocumentClient(options);
-const common = require("../../common/common");
+const common = require("../common/common");
 
 module.exports.handler = async (event) => {
   try {
@@ -28,6 +28,7 @@ module.exports.handler = async (event) => {
       billable: payload.billable,
       project: payload.project,
       entry_duration: payload.duration,
+      tag_id: payload.tag_id,
       created_at,
       is_uploaded: false,
       page_id: "",

@@ -1,4 +1,4 @@
-const commons = require("../../common/common");
+const commons = require("../../src/common/common");
 
 describe("createTmeEntry.handler", () => {
   const input = {
