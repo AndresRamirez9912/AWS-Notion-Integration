@@ -1,6 +1,4 @@
-
-
-const {DYNAMODB_TABLE} = process.env;
+const { DYNAMODB_TABLE } = process.env;
 
 const options = process.env.IS_OFFLINE
   ? { region: "localhost", endpoint: "http://localhost:8000" }
@@ -14,7 +12,7 @@ const common = require("../common/common");
 module.exports.handler = async (event) => {
   try {
     const { time_entry: payload } = JSON.parse(event.body);
-    const created_at = new Date().toISOString();
+    const createdAt = new Date().toISOString();
 
     common.validatePayload(payload);
     common.validateDate(payload.started_at, payload.finish_at);
@@ -32,7 +30,7 @@ module.exports.handler = async (event) => {
       projectName: payload.projectName,
       entry_duration: payload.duration,
       tag_id: payload.tag_id,
-      created_at,
+      createdAt,
       is_uploaded: false,
       page_id: "",
     };

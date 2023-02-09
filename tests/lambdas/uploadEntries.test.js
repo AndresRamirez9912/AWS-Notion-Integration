@@ -37,7 +37,6 @@ describe("UploadEntries.handler", () => {
       description: "Primera Prueba",
       user_id: 123456,
       userEmail: "andres@kommit.co",
-      billable: true,
       project_id: 1234567,
       projectName: "podnation",
       billable: false,

@@ -47,9 +47,9 @@ describe("createTmeEntry.handler", () => {
     expect(response.statusCode).toBe(201);
     expect(typeof response.body).toBe("string");
     expect(jsonBody.id).toBe(input.time_entry.id);
-    expect(typeof jsonBody.created_at).toBe("string");
-    delete jsonBody.created_at;
-    delete input.time_entry.created_at;
+    expect(typeof jsonBody.createdAt).toBe("string");
+    delete jsonBody.createdAt;
+    delete input.time_entry.createdAt;
     delete input.time_entry.duration;
     delete jsonBody.entry_duration;
     expect(jsonBody).toStrictEqual(input.time_entry);
@@ -70,7 +70,7 @@ describe("createTmeEntry.handler", () => {
 
   test("error decoding request body", async () => {
     const evtError = {
-      body: "{\"time_entry\":{ \"id\": \"317a00f4-9f39-42d0-90c7-589a68fc5e90\" \"started_at\": 2022-12-20T16:11:00.000Z,} }",
+      body: '{"time_entry":{ "id": "317a00f4-9f39-42d0-90c7-589a68fc5e90" "started_at": 2022-12-20T16:11:00.000Z,} }',
     };
 
     const response = await createTimeEntry.handler(evtError);
@@ -82,7 +82,7 @@ describe("createTmeEntry.handler", () => {
 
   test("error raised by missing time_entry in request body", async () => {
     const evt = {
-      body: "{\"key\": \"value\"}",
+      body: '{"key": "value"}',
       httpMethod: "POST",
     };
 

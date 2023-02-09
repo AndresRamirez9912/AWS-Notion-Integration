@@ -1,4 +1,3 @@
-const deleteTimeEntry = require("../../src/lambdas/deleteTimeEntry");
 const AWS = require("aws-sdk");
 
 const dynamodb = new AWS.DynamoDB.DocumentClient({ region: "local" });
@@ -6,6 +5,8 @@ const dynamodb = new AWS.DynamoDB.DocumentClient({ region: "local" });
 const { Client } = require("@notionhq/client");
 
 const notion = new Client({ auth: "local" });
+
+const deleteTimeEntry = require("../../src/lambdas/deleteTimeEntry");
 
 jest.mock("aws-sdk", () => {
   const mockDocumentClient = {
@@ -52,7 +53,7 @@ describe("createTmeEntry.handler", () => {
       finish_at: "2023-02-08T03:00:00.000Z",
       page_id: "26a2fab8-f92b-44ff-a53b-92d36137d277",
       entry_duration: 5976,
-      created_at: "2023-02-08T20:09:44.274Z",
+      createdAt: "2023-02-08T20:09:44.274Z",
       description: "Segunda Prueba",
       project_id: 1234567,
       projectName: "podnation",
@@ -92,7 +93,7 @@ describe("createTmeEntry.handler", () => {
     const awsErrorMessage =
       "id in path parameters does not match id in payload";
 
-    errorInput = input;
+    const errorInput = input;
     errorInput.started_at = "2022-12-20T18:14:00.000Z";
 
     const evtError = {
@@ -108,7 +109,7 @@ describe("createTmeEntry.handler", () => {
   });
 
   test("Success response deleting an ELement in Notion and Dynamodb ", async () => {
-    notionItem = item;
+    const notionItem = item;
     notionItem.Item.is_uploaded = true;
 
     dynamodb.delete.mockReturnValueOnce({
@@ -122,10 +123,6 @@ describe("createTmeEntry.handler", () => {
     notion.pages.update.mockReturnValueOnce({});
 
     item.Item.is_uploaded = true;
-    const awsEvent = {
-      body: JSON.stringify(input),
-      pathParameters: { id: "317a00f4-9f39-42d0-90c7-589a68fc5e90" },
-    };
 
     const message = "Element deleted succesfully";
     const response = await deleteTimeEntry.handler(awsEvent);

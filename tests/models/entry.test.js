@@ -59,7 +59,7 @@ describe("createTmeEntry.handler", () => {
   });
 
   test("Success editing an Entry", async () => {
-    const page_id = "26a2fab8-f92b-44ff-a53b-92d36137d277";
+    const pageId = "26a2fab8-f92b-44ff-a53b-92d36137d277";
     notion.pages.update.mockReturnValueOnce({});
 
     const newEntry = new Entry(
@@ -75,7 +75,7 @@ describe("createTmeEntry.handler", () => {
       input.time_entry.project_id,
       input.time_entry.projectName
     );
-    newEntry.editEntry(page_id);
-    expect(newEntry.entry.page_id).toBe(page_id);
+    newEntry.editEntry(pageId);
+    expect(newEntry.entry.page_id).toBe(pageId);
   });
 });

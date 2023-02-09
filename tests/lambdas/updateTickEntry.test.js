@@ -1,4 +1,3 @@
-const updateTimeEntry = require("../../src/lambdas/updateTimeEntry");
 const AWS = require("aws-sdk");
 
 const dynamodb = new AWS.DynamoDB.DocumentClient({ region: "local" });
@@ -6,6 +5,8 @@ const dynamodb = new AWS.DynamoDB.DocumentClient({ region: "local" });
 const { Client } = require("@notionhq/client");
 
 const notion = new Client({ auth: "local" });
+
+const updateTimeEntry = require("../../src/lambdas/updateTimeEntry");
 
 jest.mock("aws-sdk", () => {
   const mockDocumentClient = {
@@ -50,24 +51,24 @@ describe("createTmeEntry.handler", () => {
     pathParameters: { id: "317a00f4-9f39-42d0-90c7-589a68fc5e90" },
   };
 
-  test("success response with PUT method", async () => {
-    const data = {
-      Item: {
-        finish_at: "2022-12-20T06:00:00.000Z",
-        entry_duration: 200,
-        project_id: 1234567,
-        projectName: "podnation",
-        user_id: 123456,
-        userEmail: "andres@kommit.co",
-        created_at: "2023-01-31T19:50:51.233Z",
-        description: "Nueva Edicion de la Primera Prueba",
-        started_at: "2022-12-20T01:10:00.000Z",
-        is_uploaded: true,
-        id: "1",
-        billable: false,
-      },
-    };
+  const data = {
+    Item: {
+      finish_at: "2022-12-20T06:00:00.000Z",
+      entry_duration: 200,
+      project_id: 1234567,
+      projectName: "podnation",
+      user_id: 123456,
+      userEmail: "andres@kommit.co",
+      createdAt: "2023-01-31T19:50:51.233Z",
+      description: "Nueva Edicion de la Primera Prueba",
+      started_at: "2022-12-20T01:10:00.000Z",
+      is_uploaded: true,
+      id: "1",
+      billable: false,
+    },
+  };
 
+  test("success response with PUT method", async () => {
     dynamodb.get.mockReturnValueOnce({
       promise: () => Promise.resolve(data),
     });
@@ -84,7 +85,7 @@ describe("createTmeEntry.handler", () => {
     expect(response.statusCode).toBe(200);
     expect(typeof response.body).toBe("string");
     expect(jsonBody.id).toBe(input.time_entry.id);
-    delete jsonBody.created_at;
+    delete jsonBody.createdAt;
     expect(jsonBody).toStrictEqual(input.time_entry);
   });
 
@@ -92,7 +93,7 @@ describe("createTmeEntry.handler", () => {
     const awsErrorMessage =
       "id in path parameters does not match id in payload";
 
-    errorInput = input;
+    const errorInput = input;
     errorInput.started_at = "2022-12-20T18:14:00.000Z";
 
     const evtError = {
@@ -135,7 +136,6 @@ describe("createTmeEntry.handler", () => {
     });
 
     const response = await updateTimeEntry.handler(awsEvent);
-    const jsonBody = JSON.parse(response.body);
 
     expect(response.statusCode).toBe(500);
   });
