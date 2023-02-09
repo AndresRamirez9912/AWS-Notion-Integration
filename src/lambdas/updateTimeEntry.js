@@ -1,12 +1,13 @@
-"use strict";
 
-const DYNAMODB_TABLE = process.env.DYNAMODB_TABLE;
+
+const {DYNAMODB_TABLE} = process.env;
 
 const options = process.env.IS_OFFLINE
   ? { region: "localhost", endpoint: "http://localhost:8000" }
   : { region: process.env.REGION };
 
 const AWS = require("aws-sdk");
+
 const dynamodb = new AWS.DynamoDB.DocumentClient(options);
 const userMap = require("../../data/users.json");
 const projectMap = require("../../data/projects.json");

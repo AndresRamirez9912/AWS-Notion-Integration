@@ -1,8 +1,10 @@
 const deleteTimeEntry = require("../../src/lambdas/deleteTimeEntry");
 const AWS = require("aws-sdk");
+
 const dynamodb = new AWS.DynamoDB.DocumentClient({ region: "local" });
 
 const { Client } = require("@notionhq/client");
+
 const notion = new Client({ auth: "local" });
 
 jest.mock("aws-sdk", () => {

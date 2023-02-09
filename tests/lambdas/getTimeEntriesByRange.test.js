@@ -1,6 +1,7 @@
-const getTimeEntryByRange = require("../../src/lambdas/getTimeEntriesByRange");
 const AWS = require("aws-sdk");
+const getTimeEntryByRange = require("../../src/lambdas/getTimeEntriesByRange");
 const timeEntriesData = require("../../assets/data.json");
+
 const dynamodb = new AWS.DynamoDB.DocumentClient({ region: "local" });
 
 jest.mock("aws-sdk", () => {

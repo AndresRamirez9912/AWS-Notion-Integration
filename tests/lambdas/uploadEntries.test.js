@@ -1,6 +1,6 @@
-const uploadEntries = require("../../src/lambdas/uploadEntries");
 const AWS = require("aws-sdk");
 const { Client } = require("@notionhq/client");
+const uploadEntries = require("../../src/lambdas/uploadEntries");
 
 const dynamodb = new AWS.DynamoDB.DocumentClient({ region: "local" });
 const notion = new Client({ auth: "local" });

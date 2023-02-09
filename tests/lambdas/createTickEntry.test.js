@@ -1,5 +1,6 @@
-const createTimeEntry = require("../../src/lambdas/createTimeEntry");
 const AWS = require("aws-sdk");
+const createTimeEntry = require("../../src/lambdas/createTimeEntry");
+
 const dynamodb = new AWS.DynamoDB.DocumentClient({ region: "local" });
 
 jest.mock("aws-sdk", () => {
@@ -69,7 +70,7 @@ describe("createTmeEntry.handler", () => {
 
   test("error decoding request body", async () => {
     const evtError = {
-      body: '{"time_entry":{ "id": "317a00f4-9f39-42d0-90c7-589a68fc5e90" "started_at": 2022-12-20T16:11:00.000Z,} }',
+      body: "{\"time_entry\":{ \"id\": \"317a00f4-9f39-42d0-90c7-589a68fc5e90\" \"started_at\": 2022-12-20T16:11:00.000Z,} }",
     };
 
     const response = await createTimeEntry.handler(evtError);
@@ -81,7 +82,7 @@ describe("createTmeEntry.handler", () => {
 
   test("error raised by missing time_entry in request body", async () => {
     const evt = {
-      body: '{"key": "value"}',
+      body: "{\"key\": \"value\"}",
       httpMethod: "POST",
     };
 

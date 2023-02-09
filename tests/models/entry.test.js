@@ -1,6 +1,6 @@
+const { Client } = require("@notionhq/client");
 const Entry = require("../../src/models/entry");
 
-const { Client } = require("@notionhq/client");
 const notion = new Client({ auth: "local" });
 
 jest.mock("@notionhq/client", () => {
