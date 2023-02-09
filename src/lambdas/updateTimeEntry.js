@@ -8,7 +8,11 @@ const options = process.env.IS_OFFLINE
 
 const AWS = require("aws-sdk");
 const dynamodb = new AWS.DynamoDB.DocumentClient(options);
+const userMap = require("../../data/users.json");
+const projectMap = require("../../data/projects.json");
+const tagMap = require("../../data/tags.json");
 const common = require("../common/common");
+const Entry = require("../models/entry");
 
 module.exports.handler = async (event) => {
   try {
@@ -48,27 +52,38 @@ module.exports.handler = async (event) => {
           id: payload.id,
         },
         UpdateExpression:
-          "set started_at = :started_at, finish_at = :finish_at, description = :description, #user.#name = :user_name, #user.#id = :user_id, billable = :billable, #project.#name = :project_name, #project.#id = :project_id, entry_duration = :entry_duration",
-        ExpressionAttributeNames: {
-          "#user": "user",
-          "#name": "name",
-          "#id": "id",
-          "#project": "project",
-        },
+          "set started_at = :started_at, finish_at = :finish_at, description = :description, user_id = :user_id, userEmail = :userEmail, billable = :billable, project_id = :project_id, projectName = :projectName, entry_duration = :entry_duration",
         ExpressionAttributeValues: {
           ":started_at": itemObject.started_at,
           ":finish_at": itemObject.finish_at,
           ":description": itemObject.description,
-          ":user_name": itemObject.user.name,
-          ":user_id": itemObject.user.id,
+          ":user_id": itemObject.user_id,
+          ":userEmail": itemObject.userEmail,
           ":billable": itemObject.billable,
-          ":project_name": itemObject.project.name,
-          ":project_id": itemObject.project.id,
+          ":projectName": itemObject.projectName,
+          ":project_id": itemObject.project_id,
           ":entry_duration": itemObject.entry_duration,
         },
         ReturnValues: "ALL_NEW",
       })
       .promise();
+
+    // Update the entry in Notion if was uploaded
+    if (item.Item.is_uploaded) {
+      const newEntry = new Entry(
+        Attributes.id,
+        Attributes.started_at,
+        Attributes.finish_at,
+        userMap[Attributes.userEmail],
+        Attributes.description,
+        Attributes.billable,
+        parseFloat((Attributes.entry_duration / 3600).toFixed(2)), // Convert from seg to hours
+        tagMap[Attributes.tag_id],
+        projectMap[Attributes.projectName]
+      );
+      newEntry.editEntry(item.Item.page_id);
+    }
+
     return {
       statusCode: 200,
       body: JSON.stringify({ data: Attributes }),

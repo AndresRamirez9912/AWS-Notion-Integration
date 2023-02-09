@@ -1,3 +1,9 @@
+const NOTION_TOKEN = process.env.NOTION_TOKEN;
+const NOTION_DATABASE_ID = process.env.NOTION_DATABASE_ID;
+
+const { Client } = require("@notionhq/client");
+const notion = new Client({ auth: NOTION_TOKEN });
+
 function validatePayload(payload) {
   if (!payload) {
     const error = new Error("Missing time_entry root in request body");
@@ -33,8 +39,10 @@ function validateCompleteEntry(payload) {
     !payload.started_at ||
     !payload.finish_at ||
     !payload.description ||
-    !payload.user ||
-    !payload.project ||
+    !payload.userEmail ||
+    !payload.user_id ||
+    !payload.projectName ||
+    !payload.project_id ||
     !payload.duration
   ) {
     const error = new Error("Some Parameter is Empty");

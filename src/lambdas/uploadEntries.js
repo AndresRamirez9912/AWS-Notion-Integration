@@ -1,7 +1,5 @@
 "use strict";
 
-const NOTION_TOKEN = process.env.NOTION_TOKEN;
-const NOTION_DATABASE_ID = process.env.NOTION_DATABASE_ID;
 const DYNAMODB_TABLE = process.env.DYNAMODB_TABLE;
 
 const options = process.env.IS_OFFLINE
@@ -9,109 +7,13 @@ const options = process.env.IS_OFFLINE
   : { region: process.env.REGION };
 
 const AWS = require("aws-sdk");
-const { Client } = require("@notionhq/client");
 
 const userMap = require("../../data/users.json");
 const projectMap = require("../../data/projects.json");
 const tagMap = require("../../data/tags.json");
+const Entry = require("../models/entry");
 
 const dynamodb = new AWS.DynamoDB.DocumentClient(options);
-
-const notion = new Client({ auth: NOTION_TOKEN });
-
-class Entry {
-  constructor(
-    id,
-    dateStart,
-    dateEnd,
-    userId,
-    details,
-    biliableCheck,
-    numberOfHours,
-    tagName,
-    projectId
-  ) {
-    this.id = id;
-    const date = {
-      type: "date",
-      date: {
-        start: dateStart,
-        end: dateEnd,
-      },
-    };
-    const person = {
-      type: "people",
-      people: [
-        {
-          object: "user",
-          id: userId,
-        },
-      ],
-    };
-    const project = {
-      type: "relation",
-      has_more: false,
-      relation: [
-        {
-          id: projectId,
-        },
-      ],
-    };
-    const detail = {
-      type: "rich_text",
-      rich_text: [
-        {
-          type: "text",
-          text: {
-            content: details,
-          },
-        },
-      ],
-    };
-    const biliable = {
-      type: "checkbox",
-      checkbox: biliableCheck,
-    };
-    const hours = {
-      type: "number",
-      number: numberOfHours,
-    };
-    const tags = {
-      type: "multi_select",
-      multi_select: [
-        {
-          name: tagName,
-        },
-      ],
-    };
-
-    this.entry = {
-      parent: {
-        database_id: NOTION_DATABASE_ID,
-      },
-      properties: {
-        Date: date,
-        "Person/People": person,
-        Detail: detail,
-        Biliable: biliable,
-        Hours: hours,
-      },
-    };
-
-    if (projectId) {
-      this.entry.properties.Project = project;
-    }
-
-    if (tagName) {
-      this.entry.properties.Tags = tags;
-    }
-  }
-
-  async addEntry() {
-    const response = await notion.pages.create(this.entry);
-    await updateEntries(this.id, response.id);
-  }
-}
 
 async function getEntries() {
   try {
@@ -129,12 +31,12 @@ async function getEntries() {
   }
 }
 
-async function updateEntries(Id, pageId) {
+async function updateDbEntry(entryId, pageId) {
   try {
     return await dynamodb
       .update({
         TableName: DYNAMODB_TABLE,
-        Key: { id: Id },
+        Key: { id: entryId },
         UpdateExpression: "set page_id = :page_id, is_uploaded = :is_uploaded",
         ExpressionAttributeValues: {
           ":page_id": pageId,
@@ -150,19 +52,20 @@ async function updateEntries(Id, pageId) {
 module.exports.handler = async (event) => {
   try {
     const { Items } = await getEntries();
-    Items.forEach((item) => {
+    Items.forEach(async (item) => {
       const newEntry = new Entry(
         item.id,
         item.started_at,
         item.finish_at,
-        userMap[item.user.name],
+        userMap[item.userEmail],
         item.description,
         item.billable,
         parseFloat((item.entry_duration / 3600).toFixed(2)), // Convert from seg to hours
         tagMap[item.tag_id],
-        projectMap[item.project.name]
+        projectMap[item.projectName]
       );
-      newEntry.addEntry();
+      const response = await newEntry.addEntry();
+      updateDbEntry(item.id, response.id);
     });
     return {
       statusCode: 200,

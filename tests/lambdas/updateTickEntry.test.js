@@ -1,6 +1,9 @@
-const createTimeEntry = require("../../src/lambdas/updateTimeEntry");
+const updateTimeEntry = require("../../src/lambdas/updateTimeEntry");
 const AWS = require("aws-sdk");
 const dynamodb = new AWS.DynamoDB.DocumentClient({ region: "local" });
+
+const { Client } = require("@notionhq/client");
+const notion = new Client({ auth: "local" });
 
 jest.mock("aws-sdk", () => {
   const mockDocumentClient = {
@@ -13,6 +16,17 @@ jest.mock("aws-sdk", () => {
   return { DynamoDB: mockDynamoDB };
 });
 
+jest.mock("@notionhq/client", () => {
+  const mockCreate = {
+    update: jest.fn(),
+  };
+  const mockPages = {
+    pages: mockCreate,
+  };
+  const mockClient = jest.fn(() => mockPages);
+  return { Client: mockClient };
+});
+
 describe("createTmeEntry.handler", () => {
   const input = {
     time_entry: {
@@ -20,15 +34,12 @@ describe("createTmeEntry.handler", () => {
       started_at: "2022-12-20T16:11:00.000Z",
       finish_at: "2022-12-20T16:14:00.000Z",
       description: "ijasodij19 1 212",
-      user: {
-        id: "11",
-        name: "Juan",
-      },
+      is_uploaded: true,
+      user_id: 123456,
+      userEmail: "andres@kommit.co",
       billable: true,
-      project: {
-        id: 100,
-        name: "Rocket Launch",
-      },
+      project_id: 1234567,
+      projectName: "podnation",
     },
   };
 
@@ -42,17 +53,14 @@ describe("createTmeEntry.handler", () => {
       Item: {
         finish_at: "2022-12-20T06:00:00.000Z",
         entry_duration: 200,
-        project: {
-          id: 100,
-          name: "Rocket Launch",
-        },
-        user: {
-          id: "c05a14fb-eb6f-45c1-850c-8ea500fda7de",
-          name: "Juan",
-        },
+        project_id: 1234567,
+        projectName: "podnation",
+        user_id: 123456,
+        userEmail: "andres@kommit.co",
         created_at: "2023-01-31T19:50:51.233Z",
         description: "Nueva Edicion de la Primera Prueba",
         started_at: "2022-12-20T01:10:00.000Z",
+        is_uploaded: true,
         id: "1",
         billable: false,
       },
@@ -66,7 +74,9 @@ describe("createTmeEntry.handler", () => {
       promise: () => Promise.resolve({ Attributes: data.Item }),
     });
 
-    const response = await createTimeEntry.handler(awsEvent);
+    notion.pages.update.mockReturnValueOnce({});
+
+    const response = await updateTimeEntry.handler(awsEvent);
     const { data: jsonBody } = JSON.parse(response.body);
 
     expect(response.statusCode).toBe(200);
@@ -88,7 +98,7 @@ describe("createTmeEntry.handler", () => {
       pathParameters: { id: "450a00f4-9f39-42d0-90c7-589a68fc5e90" },
     };
 
-    const response = await createTimeEntry.handler(evtError);
+    const response = await updateTimeEntry.handler(evtError);
     const jsonBody = JSON.parse(response.body);
 
     expect(jsonBody.error).toBe(awsErrorMessage);
@@ -106,7 +116,7 @@ describe("createTmeEntry.handler", () => {
       promise: () => Promise.resolve({}),
     });
 
-    const response = await createTimeEntry.handler(awsEvent);
+    const response = await updateTimeEntry.handler(awsEvent);
     const jsonBody = JSON.parse(response.body);
 
     expect(jsonBody.error).toBe(awsErrorMessage);
@@ -122,7 +132,7 @@ describe("createTmeEntry.handler", () => {
       promise: () => Promise.reject(),
     });
 
-    const response = await createTimeEntry.handler(awsEvent);
+    const response = await updateTimeEntry.handler(awsEvent);
     const jsonBody = JSON.parse(response.body);
 
     expect(response.statusCode).toBe(500);
