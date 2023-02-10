@@ -38,10 +38,10 @@ describe("createTmeEntry.handler", () => {
       finish_at: "2022-12-20T16:14:00.000Z",
       description: "ijasodij19 1 212",
       is_uploaded: true,
-      user_id: 123456,
-      userEmail: "andres@kommit.co",
+      user_id: "4268a196-f3f2-48f8-bede-b469676354ee",
+      userEmail: "andres@moove-it.com",
       billable: true,
-      project_id: 1234567,
+      project_id: "99c1f9b8-b7d5-4399-8180-9e92e63509c2",
       projectName: "podnation",
     },
   };
@@ -55,11 +55,11 @@ describe("createTmeEntry.handler", () => {
     Item: {
       finish_at: "2022-12-20T06:00:00.000Z",
       entry_duration: 200,
-      project_id: 1234567,
+      project_id: "99c1f9b8-b7d5-4399-8180-9e92e63509c2",
       projectName: "podnation",
-      user_id: 123456,
-      userEmail: "andres@kommit.co",
-      createdAt: "2023-01-31T19:50:51.233Z",
+      user_id: "4268a196-f3f2-48f8-bede-b469676354ee",
+      userEmail: "andres@moove-it.com",
+      created_at: "2023-01-31T19:50:51.233Z",
       description: "Nueva Edicion de la Primera Prueba",
       started_at: "2022-12-20T01:10:00.000Z",
       is_uploaded: true,
@@ -85,7 +85,7 @@ describe("createTmeEntry.handler", () => {
     expect(response.statusCode).toBe(200);
     expect(typeof response.body).toBe("string");
     expect(jsonBody.id).toBe(input.time_entry.id);
-    delete jsonBody.createdAt;
+    delete jsonBody.created_at;
     expect(jsonBody).toStrictEqual(input.time_entry);
   });
 

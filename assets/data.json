@@ -1,6 +1,6 @@
 [
   {
-    "createdAt": "2023-01-24T17:47:34.691Z",
+    "created_at": "2023-01-24T17:47:34.691Z",
     "id": "aa4c46b9-1be3-4677-872a-374d5157bc15",
     "eventType": "CREATE",
     "payload": {
@@ -15,7 +15,7 @@
     }
   },
   {
-    "createdAt": "2023-01-24T17:47:34.691Z",
+    "created_at": "2023-01-24T17:47:34.691Z",
     "id": "aa4c46b9-1be3-4677-872a-374d5157bc16",
     "eventType": "CREATE",
     "payload": {
@@ -30,7 +30,7 @@
     }
   },
   {
-    "createdAt": "2023-01-24T17:47:34.691Z",
+    "created_at": "2023-01-24T17:47:34.691Z",
     "id": "aa4c46b9-1be3-4677-872a-374d5157bc17",
     "eventType": "CREATE",
     "payload": {
@@ -45,7 +45,7 @@
     }
   },
   {
-    "createdAt": "2023-01-24T17:47:34.691Z",
+    "created_at": "2023-01-24T17:47:34.691Z",
     "id": "aa4c46b9-1be3-4677-872a-374d5157bc18",
     "eventType": "CREATE",
     "payload": {
@@ -60,7 +60,7 @@
     }
   },
   {
-    "createdAt": "2023-01-24T17:47:34.691Z",
+    "created_at": "2023-01-24T17:47:34.691Z",
     "id": "aa4c46b9-1be3-4677-872a-374d5157bc19",
     "eventType": "CREATE",
     "payload": {

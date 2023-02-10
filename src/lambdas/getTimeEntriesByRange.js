@@ -1,6 +1,4 @@
-
-
-const {DYNAMODB_TABLE} = process.env;
+const { DYNAMODB_TABLE } = process.env;
 
 const options = process.env.IS_OFFLINE
   ? { region: "localhost", endpoint: "http://localhost:8000" }

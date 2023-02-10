@@ -30,7 +30,7 @@ module.exports.handler = async (event) => {
       projectName: payload.projectName,
       entry_duration: payload.duration,
       tag_id: payload.tag_id,
-      createdAt,
+      created_at: createdAt,
       is_uploaded: false,
       page_id: "",
     };

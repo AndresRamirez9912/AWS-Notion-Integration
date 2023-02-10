@@ -12,7 +12,7 @@ const generatePolicy = ({ allow }) => ({
   },
 });
 
-exports.handler = async function auth(event) {
+exports.handler = async (event) => {
   const authToken = event.authorizationToken;
   const [, token] = authToken.split("Token token=");
 

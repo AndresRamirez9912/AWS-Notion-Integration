@@ -1,5 +1,4 @@
-const { NOTION_TOKEN } = process.env;
-const { NOTION_DATABASE_ID } = process.env;
+const { NOTION_TOKEN, NOTION_DATABASE_ID } = process.env;
 
 const { Client } = require("@notionhq/client");
 
