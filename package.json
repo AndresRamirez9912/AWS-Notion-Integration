@@ -31,6 +31,7 @@
   },
   "dependencies": {
     "@notionhq/client": "^2.2.3",
-    "aws-sdk": "^2.1312.0"
+    "aws-sdk": "^2.1312.0",
+    "serverless": "^3.27.0"
   }
 }
