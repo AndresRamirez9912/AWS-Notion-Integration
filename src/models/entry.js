@@ -1,7 +1,7 @@
-const NOTION_TOKEN = process.env.NOTION_TOKEN;
-const NOTION_DATABASE_ID = process.env.NOTION_DATABASE_ID;
+const { NOTION_TOKEN, NOTION_DATABASE_ID } = process.env;
 
 const { Client } = require("@notionhq/client");
+
 const notion = new Client({ auth: NOTION_TOKEN });
 
 module.exports = class Entry {
@@ -93,11 +93,11 @@ module.exports = class Entry {
   }
 
   async addEntry() {
-    return await notion.pages.create(this.entry);
+    return notion.pages.create(this.entry);
   }
 
-  async editEntry(page_id) {
-    this.entry.page_id = page_id;
+  async editEntry(pageId) {
+    this.entry.page_id = pageId;
     await notion.pages.update(this.entry);
   }
 };

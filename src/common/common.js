@@ -1,9 +1,3 @@
-const NOTION_TOKEN = process.env.NOTION_TOKEN;
-const NOTION_DATABASE_ID = process.env.NOTION_DATABASE_ID;
-
-const { Client } = require("@notionhq/client");
-const notion = new Client({ auth: NOTION_TOKEN });
-
 function validatePayload(payload) {
   if (!payload) {
     const error = new Error("Missing time_entry root in request body");
@@ -24,8 +18,8 @@ function validateURLQuery(event, payload) {
   return null;
 }
 
-function validateDate(started_at, finish_at) {
-  if (started_at > finish_at) {
+function validateDate(startedAt, finishAt) {
+  if (startedAt > finishAt) {
     const error = new Error("Start date must be before end date");
     error.code = 400;
     throw error;
@@ -55,7 +49,7 @@ function validateCompleteEntry(payload) {
 function isIsoDate(str) {
   if (!/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/.test(str)) return false;
   const d = new Date(str);
-  return d instanceof Date && !isNaN(d) && d.toISOString() === str; // valid date
+  return d instanceof Date && !Number.isNaN(d) && d.toISOString() === str; // valid date
 }
 
 module.exports = {

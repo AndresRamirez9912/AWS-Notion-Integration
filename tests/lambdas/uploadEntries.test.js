@@ -1,6 +1,6 @@
-const uploadEntries = require("../../src/lambdas/uploadEntries");
 const AWS = require("aws-sdk");
 const { Client } = require("@notionhq/client");
+const uploadEntries = require("../../src/lambdas/uploadEntries");
 
 const dynamodb = new AWS.DynamoDB.DocumentClient({ region: "local" });
 const notion = new Client({ auth: "local" });
@@ -35,10 +35,9 @@ describe("UploadEntries.handler", () => {
       entry_duration: 100,
       started_at: "2023-01-31T01:20:00.000Z",
       description: "Primera Prueba",
-      user_id: 123456,
-      userEmail: "andres@kommit.co",
-      billable: true,
-      project_id: 1234567,
+      user_id: "4268a196-f3f2-48f8-bede-b469676354ee",
+      userEmail: "andres@moove-it.com",
+      project_id: "99c1f9b8-b7d5-4399-8180-9e92e63509c2",
       projectName: "podnation",
       billable: false,
       is_uploaded: false,

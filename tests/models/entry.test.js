@@ -1,6 +1,6 @@
+const { Client } = require("@notionhq/client");
 const Entry = require("../../src/models/entry");
 
-const { Client } = require("@notionhq/client");
 const notion = new Client({ auth: "local" });
 
 jest.mock("@notionhq/client", () => {
@@ -22,10 +22,10 @@ describe("createTmeEntry.handler", () => {
       started_at: "2022-12-20T16:11:00.000Z",
       finish_at: "2022-12-20T16:14:00.000Z",
       description: "ijasodij19 1 212",
-      user_id: 123456,
-      userEmail: "andres@kommit.co",
+      user_id: "4268a196-f3f2-48f8-bede-b469676354ee",
+      userEmail: "andres@moove-it.com",
       billable: true,
-      project_id: 1234567,
+      project_id: "99c1f9b8-b7d5-4399-8180-9e92e63509c2",
       projectName: "podnation",
       duration: 180,
       tag_id: 100,
@@ -59,7 +59,7 @@ describe("createTmeEntry.handler", () => {
   });
 
   test("Success editing an Entry", async () => {
-    const page_id = "26a2fab8-f92b-44ff-a53b-92d36137d277";
+    const pageId = "26a2fab8-f92b-44ff-a53b-92d36137d277";
     notion.pages.update.mockReturnValueOnce({});
 
     const newEntry = new Entry(
@@ -75,7 +75,7 @@ describe("createTmeEntry.handler", () => {
       input.time_entry.project_id,
       input.time_entry.projectName
     );
-    newEntry.editEntry(page_id);
-    expect(newEntry.entry.page_id).toBe(page_id);
+    newEntry.editEntry(pageId);
+    expect(newEntry.entry.page_id).toBe(pageId);
   });
 });

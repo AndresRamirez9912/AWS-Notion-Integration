@@ -1,9 +1,12 @@
-const deleteTimeEntry = require("../../src/lambdas/deleteTimeEntry");
 const AWS = require("aws-sdk");
+
 const dynamodb = new AWS.DynamoDB.DocumentClient({ region: "local" });
 
 const { Client } = require("@notionhq/client");
+
 const notion = new Client({ auth: "local" });
+
+const deleteTimeEntry = require("../../src/lambdas/deleteTimeEntry");
 
 jest.mock("aws-sdk", () => {
   const mockDocumentClient = {
@@ -34,10 +37,10 @@ describe("createTmeEntry.handler", () => {
       started_at: "2022-12-20T16:11:00.000Z",
       finish_at: "2022-12-20T16:14:00.000Z",
       description: "ijasodij19 1 212",
-      user_id: 123456,
-      userEmail: "andres@kommit.co",
+      user_id: "4268a196-f3f2-48f8-bede-b469676354ee",
+      userEmail: "andres@moove-it.com",
       billable: true,
-      project_id: 1234567,
+      project_id: "99c1f9b8-b7d5-4399-8180-9e92e63509c2",
       projectName: "podnation",
       entry_duration: 180,
       tag_id: 100,
@@ -52,14 +55,14 @@ describe("createTmeEntry.handler", () => {
       entry_duration: 5976,
       created_at: "2023-02-08T20:09:44.274Z",
       description: "Segunda Prueba",
-      project_id: 1234567,
+      project_id: "99c1f9b8-b7d5-4399-8180-9e92e63509c2",
       projectName: "podnation",
       started_at: "2023-02-08T01:20:00.000Z",
       id: "2",
       billable: true,
       is_uploaded: false,
-      user_id: 123456,
-      userEmail: "andres@kommit.co",
+      user_id: "4268a196-f3f2-48f8-bede-b469676354ee",
+      userEmail: "andres@moove-it.com",
     },
   };
 
@@ -90,7 +93,7 @@ describe("createTmeEntry.handler", () => {
     const awsErrorMessage =
       "id in path parameters does not match id in payload";
 
-    errorInput = input;
+    const errorInput = input;
     errorInput.started_at = "2022-12-20T18:14:00.000Z";
 
     const evtError = {
@@ -106,7 +109,7 @@ describe("createTmeEntry.handler", () => {
   });
 
   test("Success response deleting an ELement in Notion and Dynamodb ", async () => {
-    notionItem = item;
+    const notionItem = item;
     notionItem.Item.is_uploaded = true;
 
     dynamodb.delete.mockReturnValueOnce({
@@ -120,10 +123,6 @@ describe("createTmeEntry.handler", () => {
     notion.pages.update.mockReturnValueOnce({});
 
     item.Item.is_uploaded = true;
-    const awsEvent = {
-      body: JSON.stringify(input),
-      pathParameters: { id: "317a00f4-9f39-42d0-90c7-589a68fc5e90" },
-    };
 
     const message = "Element deleted succesfully";
     const response = await deleteTimeEntry.handler(awsEvent);
