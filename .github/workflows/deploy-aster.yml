@@ -23,8 +23,8 @@ jobs:
       run: yarn run lint
     - name: Run Test
       run: yarn test
-    - name: Print Node version
-      run: node --version
+    - name: Install Serverless global
+      run: npm install -g serverless
     - name: Print Serverless version
       run: sls --version
     - name: Setup AWS Credentials
