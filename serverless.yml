@@ -8,6 +8,8 @@ custom:
     api:
       DYNAMODB_TABLE: time-entries-${env:STAGE}
       REGION: ${self:provider.region}
+      NOTION_TOKEN: ${file(./env-auth.yml):${env:STAGE}.NOTION_TOKEN}
+      NOTION_DATABASE_ID: ${file(./env-auth.yml):${env:STAGE}.NOTION_DATABASE_ID}
   dynamodb:
     stages:
       - api
@@ -22,6 +24,7 @@ provider:
   name: aws
   runtime: nodejs16.x
   stage: api # default stage
+  timeout: 15
   region: us-east-1
   environment: ${self:custom.settings.${self:custom.stage}}
   iamRoleStatements:
@@ -45,6 +48,9 @@ functions:
             type: token
             identitySource: method.request.header.Authorization
 
+  updateTimeEntry:
+    handler: src/lambdas/updateTimeEntry.handler
+    events:
       - http:
           path: v1/time_entries/{id}
           method: put
@@ -55,6 +61,9 @@ functions:
             type: token
             identitySource: method.request.header.Authorization
 
+  deleteTimeEntry:
+    handler: src/lambdas/deleteTimeEntry.handler
+    events:
       - http:
           path: v1/time_entries/{id}
           method: delete
@@ -64,6 +73,24 @@ functions:
             resultTtlInSeconds: 0
             type: token
             identitySource: method.request.header.Authorization
+
+  getTimeEntriesByRange:
+    handler: src/lambdas/getTimeEntriesByRange.handler
+    events:
+      - http:
+          path: v1/time_entries
+          method: get
+          cors: true
+          authorizer:
+            name: authorizerFunc
+            resultTtlInSeconds: 0
+            type: token
+            identitySource: method.request.header.Authorization
+
+  uploadEntry:
+    handler: src/lambdas/uploadEntries.handler
+    events:
+      - schedule: cron(0 19 ? * FRI *) # 7pm UTC, every friday
 
   authorizerFunc:
     handler: src/lambdas/authorizer.handler
