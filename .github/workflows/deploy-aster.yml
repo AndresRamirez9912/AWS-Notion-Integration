@@ -24,7 +24,7 @@ jobs:
     - name: Run Test
       run: yarn test
     - name: Setup AWS Credentials
-      run: serverless config credentials --provider aws --key $secrets.AWS_ACCESS_KEY_ID --secret secrets.AWS_SECRET_ACCESS_KEY
+      run: serverless config credentials --provider aws --key ${{secrets.AWS_ACCESS_KEY_ID}} --secret ${{secrets.AWS_SECRET_ACCESS_KEY}}
     - name: Install Serverless Plugin and Deploy
       run: yarn deploy:dev
 
