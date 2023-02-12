@@ -1,9 +1,12 @@
-const updateTimeEntry = require("../../src/lambdas/updateTimeEntry");
 const AWS = require("aws-sdk");
+
 const dynamodb = new AWS.DynamoDB.DocumentClient({ region: "local" });
 
 const { Client } = require("@notionhq/client");
+
 const notion = new Client({ auth: "local" });
+
+const updateTimeEntry = require("../../src/lambdas/updateTimeEntry");
 
 jest.mock("aws-sdk", () => {
   const mockDocumentClient = {
@@ -35,10 +38,10 @@ describe("createTmeEntry.handler", () => {
       finish_at: "2022-12-20T16:14:00.000Z",
       description: "ijasodij19 1 212",
       is_uploaded: true,
-      user_id: 123456,
-      userEmail: "andres@kommit.co",
+      user_id: "4268a196-f3f2-48f8-bede-b469676354ee",
+      userEmail: "andres@moove-it.com",
       billable: true,
-      project_id: 1234567,
+      project_id: "99c1f9b8-b7d5-4399-8180-9e92e63509c2",
       projectName: "podnation",
     },
   };
@@ -48,24 +51,24 @@ describe("createTmeEntry.handler", () => {
     pathParameters: { id: "317a00f4-9f39-42d0-90c7-589a68fc5e90" },
   };
 
-  test("success response with PUT method", async () => {
-    const data = {
-      Item: {
-        finish_at: "2022-12-20T06:00:00.000Z",
-        entry_duration: 200,
-        project_id: 1234567,
-        projectName: "podnation",
-        user_id: 123456,
-        userEmail: "andres@kommit.co",
-        created_at: "2023-01-31T19:50:51.233Z",
-        description: "Nueva Edicion de la Primera Prueba",
-        started_at: "2022-12-20T01:10:00.000Z",
-        is_uploaded: true,
-        id: "1",
-        billable: false,
-      },
-    };
+  const data = {
+    Item: {
+      finish_at: "2022-12-20T06:00:00.000Z",
+      entry_duration: 200,
+      project_id: "99c1f9b8-b7d5-4399-8180-9e92e63509c2",
+      projectName: "podnation",
+      user_id: "4268a196-f3f2-48f8-bede-b469676354ee",
+      userEmail: "andres@moove-it.com",
+      created_at: "2023-01-31T19:50:51.233Z",
+      description: "Nueva Edicion de la Primera Prueba",
+      started_at: "2022-12-20T01:10:00.000Z",
+      is_uploaded: true,
+      id: "1",
+      billable: false,
+    },
+  };
 
+  test("success response with PUT method", async () => {
     dynamodb.get.mockReturnValueOnce({
       promise: () => Promise.resolve(data),
     });
@@ -90,7 +93,7 @@ describe("createTmeEntry.handler", () => {
     const awsErrorMessage =
       "id in path parameters does not match id in payload";
 
-    errorInput = input;
+    const errorInput = input;
     errorInput.started_at = "2022-12-20T18:14:00.000Z";
 
     const evtError = {
@@ -133,7 +136,6 @@ describe("createTmeEntry.handler", () => {
     });
 
     const response = await updateTimeEntry.handler(awsEvent);
-    const jsonBody = JSON.parse(response.body);
 
     expect(response.statusCode).toBe(500);
   });

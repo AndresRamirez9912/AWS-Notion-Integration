@@ -1,0 +1,68 @@
+name: Deploy to Dev
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+
+jobs:
+  deploy-dev:
+    name: Deploy Dev
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+    - name: Harden Runner
+      uses: step-security/harden-runner@18bf8ad2ca49c14cbb28b91346d626ccfb00c518 # v2.1.0
+      with:
+        disable-sudo: true
+        egress-policy: block
+        allowed-endpoints: >
+          cloudformation.us-east-1.amazonaws.com:443
+          github.com:443
+          lambda.us-east-1.amazonaws.com:443
+          registry.npmjs.org:443
+          registry.yarnpkg.com:443
+          sp-notifications-and-metrics-v1.serverless-platform.com:443
+          sts.amazonaws.com:443
+          time-webhook-dev-api-serverlessdeploymentbucket-14l68aqx6ow5f.s3.amazonaws.com:443
+
+    - name: Get this repository
+      uses: actions/checkout@v3
+
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    - name: Install Dependencies
+      run: yarn install
+
+    - name: Create env file
+      run: touch env-auth.yml
+
+    - name: Add Secrets into yml file
+      run: |
+        echo dev:>> env-auth.yml
+        echo -e '  AUTH_TOKEN:' ${DEV_AUTH_TOKEN}>> env-auth.yml
+        echo -e '  NOTION_TOKEN:' ${DEV_NOTION_TOKEN}>> env-auth.yml
+        echo -e '  NOTION_DATABASE_ID:' ${DEV_NOTION_DATABASE_ID}>> env-auth.yml
+
+      env:
+        DEV_AUTH_TOKEN: ${{secrets.DEV_AUTH_TOKEN}}
+        DEV_NOTION_TOKEN: ${{secrets.DEV_NOTION_TOKEN}}
+        DEV_NOTION_DATABASE_ID: ${{secrets.DEV_NOTION_DATABASE_ID}}
+
+    - name: Install Serverless global
+      run: npm install -g serverless
+
+    - name: Setup AWS Credentials
+      run: serverless config credentials --provider aws --key ${{secrets.AWS_ACCESS_KEY_ID}} --secret ${{secrets.AWS_SECRET_ACCESS_KEY}}
+
+    - name: Deploy to Dev stage
+      run: yarn deploy:dev
