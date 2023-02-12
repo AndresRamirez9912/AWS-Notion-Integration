@@ -53,19 +53,10 @@ jobs:
         echo -e '  NOTION_TOKEN:' ${DEV_NOTION_TOKEN}>> env-auth.yml
         echo -e '  NOTION_DATABASE_ID:' ${DEV_NOTION_DATABASE_ID}>> env-auth.yml
 
-        echo prod:>> env-auth.yml
-        echo -e '  AUTH_TOKEN:' ${PROD_AUTH_TOKEN}>> env-auth.yml
-        echo -e '  NOTION_TOKEN:' ${PROD_NOTION_TOKEN}>> env-auth.yml
-        echo -e '  NOTION_DATABASE_ID:' ${PROD_NOTION_DATABASE_ID}>> env-auth.yml
-
       env:
         DEV_AUTH_TOKEN: ${{secrets.DEV_AUTH_TOKEN}}
         DEV_NOTION_TOKEN: ${{secrets.DEV_NOTION_TOKEN}}
         DEV_NOTION_DATABASE_ID: ${{secrets.DEV_NOTION_DATABASE_ID}}
-
-        PROD_AUTH_TOKEN: ${{secrets.PROD_AUTH_TOKEN}}
-        PROD_NOTION_TOKEN: ${{secrets.PROD_NOTION_TOKEN}}
-        PROD_NOTION_DATABASE_ID: ${{secrets.PROD_NOTION_DATABASE_ID}}
 
     - name: Install Serverless global
       run: npm install -g serverless
