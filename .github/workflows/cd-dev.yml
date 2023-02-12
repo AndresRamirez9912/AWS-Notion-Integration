@@ -16,16 +16,16 @@ jobs:
         node-version: [16.x]
 
     steps:
-    - name: Harden Runner
-      uses: step-security/harden-runner@18bf8ad2ca49c14cbb28b91346d626ccfb00c518 # v2.1.0
-      with:
-        disable-sudo: true
-        egress-policy: block
-        allowed-endpoints: >
-          coveralls.io:443
-          github.com:443
-          registry.npmjs.org:443
-          registry.yarnpkg.com:443
+    # - name: Harden Runner
+    #   uses: step-security/harden-runner@18bf8ad2ca49c14cbb28b91346d626ccfb00c518 # v2.1.0
+    #   with:
+    #     disable-sudo: true
+    #     egress-policy: block
+    #     allowed-endpoints: >
+    #       coveralls.io:443
+    #       github.com:443
+    #       registry.npmjs.org:443
+    #       registry.yarnpkg.com:443
 
     - name: Get this repository
       uses: actions/checkout@v3
@@ -43,11 +43,11 @@ jobs:
       run: touch env-auth.yml
 
     - name: Add Secrets into yml file
-      run:
+      run: |
         echo dev:>> env-auth.yml
-        echo -e '  AUTH_TOKEN:' ${DEV_AUTH_TOKEN}>> env-auth.yml
-        echo -e '  NOTION_TOKEN:' ${DEV_NOTION_TOKEN}>> env-auth.yml
-        echo -e '  NOTION_DATABASE_ID:' ${DEV_NOTION_DATABASE_ID}>> env-auth.yml
+        echo -e '  AUTH_TOKEN:' dev>> env-auth.yml
+        echo -e '  NOTION_TOKEN:' secret_IXQ018AjyZ1QyNQU3d71DpKngBRmsHlW4W4NuTdU2oP>> env-auth.yml
+        echo -e '  NOTION_DATABASE_ID:' 01e3b8eefc4d4befa396176770c595b2>> env-auth.yml
 
         echo prod:>> env-auth.yml
         echo -e '  AUTH_TOKEN:' ${PROD_AUTH_TOKEN}>> env-auth.yml
@@ -66,13 +66,8 @@ jobs:
     - name: Install Serverless global
       run: npm install -g serverless
 
-    - name: Print Serverless version
-      run: sls --version
-
     - name: Setup AWS Credentials
       run: serverless config credentials --provider aws --key ${{secrets.AWS_ACCESS_KEY_ID}} --secret ${{secrets.AWS_SECRET_ACCESS_KEY}}
 
     - name: Deploy to Dev stage
-      run:
-        cat env-auth.yml
-        yarn deploy:dev
+      run: yarn deploy:dev
