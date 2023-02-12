@@ -1,18 +1,15 @@
-"use strict";
-
-const DYNAMODB_TABLE = process.env.DYNAMODB_TABLE;
-const NOTION_TOKEN = process.env.NOTION_TOKEN;
-const NOTION_DATABASE_ID = process.env.NOTION_DATABASE_ID;
+const { DYNAMODB_TABLE, NOTION_TOKEN } = process.env;
 
 const options = process.env.IS_OFFLINE
   ? { region: "localhost", endpoint: "http://localhost:8000" }
   : { region: process.env.REGION };
 
 const AWS = require("aws-sdk");
+
 const dynamodb = new AWS.DynamoDB.DocumentClient(options);
+const { Client } = require("@notionhq/client");
 const common = require("../common/common");
 
-const { Client } = require("@notionhq/client");
 const notion = new Client({ auth: NOTION_TOKEN });
 
 module.exports.handler = async (event) => {

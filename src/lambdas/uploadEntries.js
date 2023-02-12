@@ -1,6 +1,4 @@
-"use strict";
-
-const DYNAMODB_TABLE = process.env.DYNAMODB_TABLE;
+const { DYNAMODB_TABLE } = process.env;
 
 const options = process.env.IS_OFFLINE
   ? { region: "localhost", endpoint: "http://localhost:8000" }
@@ -49,7 +47,7 @@ async function updateDbEntry(entryId, pageId) {
   }
 }
 
-module.exports.handler = async (event) => {
+module.exports.handler = async () => {
   try {
     const { Items } = await getEntries();
     Items.forEach(async (item) => {

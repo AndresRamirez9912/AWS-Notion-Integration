@@ -1,5 +1,6 @@
-const createTimeEntry = require("../../src/lambdas/createTimeEntry");
 const AWS = require("aws-sdk");
+const createTimeEntry = require("../../src/lambdas/createTimeEntry");
+
 const dynamodb = new AWS.DynamoDB.DocumentClient({ region: "local" });
 
 jest.mock("aws-sdk", () => {
@@ -19,10 +20,10 @@ describe("createTmeEntry.handler", () => {
       started_at: "2022-12-20T16:11:00.000Z",
       finish_at: "2022-12-20T16:14:00.000Z",
       description: "ijasodij19 1 212",
-      user_id: 123456,
-      userEmail: "andres@kommit.co",
+      user_id: "4268a196-f3f2-48f8-bede-b469676354ee",
+      userEmail: "andres@moove-it.com",
       billable: true,
-      project_id: 1234567,
+      project_id: "99c1f9b8-b7d5-4399-8180-9e92e63509c2",
       projectName: "podnation",
       duration: 180,
       is_uploaded: false,
