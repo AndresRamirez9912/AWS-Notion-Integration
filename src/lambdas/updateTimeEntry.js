@@ -82,7 +82,7 @@ module.exports.handler = async (event) => {
       );
       newEntry.editEntry(item.Item.page_id);
     }
-
+    console.log("Entry %s Edited succesfully", payload.id);
     return {
       statusCode: 200,
       body: JSON.stringify({ data: Attributes }),

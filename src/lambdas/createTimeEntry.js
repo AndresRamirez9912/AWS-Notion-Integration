@@ -41,6 +41,7 @@ module.exports.handler = async (event) => {
         Item: item,
       })
       .promise();
+    console.log("Entry %s created succesfully", payload.id);
     return {
       statusCode: 201,
       body: JSON.stringify({ data: item }),

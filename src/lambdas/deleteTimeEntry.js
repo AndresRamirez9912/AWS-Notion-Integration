@@ -45,7 +45,7 @@ module.exports.handler = async (event) => {
         },
       })
       .promise();
-
+    console.log("Entry %s eliminated succesfully", payload.id);
     return {
       statusCode: 200,
       body: JSON.stringify({ data: "Element deleted succesfully" }),

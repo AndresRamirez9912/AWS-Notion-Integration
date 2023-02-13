@@ -64,6 +64,7 @@ module.exports.handler = async () => {
       );
       const response = await newEntry.addEntry();
       updateDbEntry(item.id, response.id);
+      console.log("Entry %s uploaded to Notion succesfully", item.id);
     });
     return {
       statusCode: 200,
