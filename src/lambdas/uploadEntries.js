@@ -63,6 +63,7 @@ module.exports.handler = async () => {
         projectMap[item.projectName]
       );
       const response = await newEntry.addEntry();
+      console.log("Notion Response::::", response);
       updateDbEntry(item.id, response.id);
       console.log("Entry %s uploaded to Notion succesfully", item.id);
     });
