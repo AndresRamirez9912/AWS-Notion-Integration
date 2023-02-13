@@ -90,7 +90,7 @@ functions:
   uploadEntry:
     handler: src/lambdas/uploadEntries.handler
     events:
-      - schedule: rate(1 minutes)
+      - schedule: rate(1 minute)
       # - schedule: cron(0 19 ? * FRI *) # 7pm UTC, every friday
 
   authorizerFunc:
