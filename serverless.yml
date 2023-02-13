@@ -24,7 +24,7 @@ provider:
   name: aws
   runtime: nodejs16.x
   stage: api # default stage
-  timeout: 15
+  timeout: 25
   region: us-east-1
   environment: ${self:custom.settings.${self:custom.stage}}
   iamRoleStatements:
